@@ -1,0 +1,32 @@
+package com.example.todobackver2.entity;
+
+
+import com.example.todobackver2.CompositeKey.Workspace_user_id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.apache.catalina.User;
+
+@Entity
+@IdClass(Workspace_user_id.class)
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+public class Workspace_user {
+
+    @Id
+    private Long userId;
+
+    @Id
+    private Long workspaceId;
+
+    @ManyToOne
+    @JoinColumn(name = "userId",insertable = false, updatable = false)
+    private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "workspaceId",insertable = false, updatable = false)
+    private Workspace workspace;
+
+}
