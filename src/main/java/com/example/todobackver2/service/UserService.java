@@ -8,7 +8,7 @@ public interface UserService extends UserDetailsService {
     AuthDto getUser(String email);
     AuthDto getUserByAccessToken(String accessToken);
 
-    UserEntity getUserById(String userId);
+    UserEntity getUserById(Long userId);
 
-    void updateUserById(String userId, UserEntity userEntity);
+    void updateUserById(Long userId, UserEntity userEntity);
 }

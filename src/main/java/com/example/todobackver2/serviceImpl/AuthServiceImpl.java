@@ -3,14 +3,12 @@ package com.example.todobackver2.serviceImpl;
 
 import com.example.todobackver2.Exception.ErrorMessage;
 import com.example.todobackver2.Exception.UserServiceExceptions;
-import com.example.todobackver2.Utils.GenerateId;
 import com.example.todobackver2.dto.AuthDto;
 import com.example.todobackver2.entity.UserEntity;
 import com.example.todobackver2.repository.UserRepository;
 import com.example.todobackver2.service.AuthService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,21 +36,9 @@ public class AuthServiceImpl implements AuthService {
 
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(authDto, userEntity);
-
         userEntity.setPassword(bCryptPasswordEncoder.encode(authDto.getPassword()));
-
-        while (true) {
-
-            try {
-
-                UserEntity storedUser = userRepository.save(userEntity);
-
-                BeanUtils.copyProperties(storedUser, returnValue);
-                break;
-            } catch (DataIntegrityViolationException e) {
-
-            }
-        }
+        UserEntity storedUser = userRepository.save(userEntity);
+        BeanUtils.copyProperties(storedUser, returnValue);
 
         return returnValue;
     }

@@ -15,7 +15,7 @@ public class AuthDto implements Serializable {
     public static final long serialVersionUId=1L;
 
     private String userName;
-    private String userId;
+    private Long userId;
     private String avatar;
     private String password;
     private String email;
