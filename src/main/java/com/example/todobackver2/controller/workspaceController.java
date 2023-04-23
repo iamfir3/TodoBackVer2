@@ -20,23 +20,23 @@ import java.util.List;
 @RestController
 @RequestMapping("workspace")
 public class workspaceController {
-//
-//    @Autowired
-//    WorkspaceService workspaceService;
-//    @Autowired
-//    ProjectService projectService;
-//
-//    @PostMapping
-//    @CrossOrigin
-//    public WorkspaceResponse createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
-//        WorkspaceResponse returnValue = new WorkspaceResponse();
-//        WorkspaceDto workspaceDto = workspaceService.createWorkspace(workspaceRequest.getWorkspaceName(), workspaceRequest.getUserId());
-//        BeanUtils.copyProperties(workspaceDto, returnValue);
-//        returnValue.setMessage("Workspace created");
-//        returnValue.setWorkspaceId(workspaceDto.getWorkspaceId());
-//        return returnValue;
-//    }
-//
+
+    @Autowired
+    WorkspaceService workspaceService;
+    @Autowired
+    ProjectService projectService;
+
+    @PostMapping
+    @CrossOrigin
+    public WorkspaceResponse createWorkspace(@RequestBody WorkspaceRequest workspaceRequest) {
+        WorkspaceResponse returnValue = new WorkspaceResponse();
+        WorkspaceDto workspaceDto = workspaceService.createWorkspace(workspaceRequest.getWorkspaceName(), workspaceRequest.getUserId());
+        BeanUtils.copyProperties(workspaceDto, returnValue);
+        returnValue.setMessage("Workspace created");
+        returnValue.setWorkspaceId(workspaceDto.getWorkspaceId());
+        return returnValue;
+    }
+
 //    @GetMapping("/{workspaceId}")
 //    @CrossOrigin
 //    public GetAllProjectResponse<List<ProjectResponse>> getAllProject(@PathVariable String workspaceId, @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "7") Integer limit) {

@@ -17,6 +17,7 @@ public class ChatEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
+
     @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name="userSender",nullable = false)
     private UserEntity userSender;
@@ -27,5 +28,8 @@ public class ChatEntity {
 
     @Column(name="content",nullable = false)
     private String content;
+
+    @Column(name="roomId",nullable = false)
+    private String roomId;
 
 }
