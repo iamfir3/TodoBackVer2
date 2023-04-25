@@ -9,12 +9,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-
+public class MessageResponse {
     private String message;
     private int status;
-    private String userName;
-    private String email;
-    private String avatar;
-    private Long userId;
+    private String projectName;
 }

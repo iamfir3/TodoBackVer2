@@ -2,19 +2,19 @@ package com.example.todobackver2.controller;
 
 import com.example.todobackver2.Exception.ErrorMessage;
 import com.example.todobackver2.Exception.WorkspaceServiceException;
+import com.example.todobackver2.dto.AuthDto;
 import com.example.todobackver2.dto.ProjectDto;
 import com.example.todobackver2.dto.WorkspaceDto;
+import com.example.todobackver2.entity.UserEntity;
 import com.example.todobackver2.request.WorkspaceRequest;
-import com.example.todobackver2.response.GetAllProjectResponse;
-import com.example.todobackver2.response.GetAllWorkspacesResponse;
-import com.example.todobackver2.response.ProjectResponse;
-import com.example.todobackver2.response.WorkspaceResponse;
+import com.example.todobackver2.response.*;
 import com.example.todobackver2.service.ProjectService;
 import com.example.todobackver2.service.WorkspaceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -75,4 +75,24 @@ public class workspaceController {
 //        }
 //        return returnValue;
 //    }
+    @GetMapping("/{workspaceId}/{currentUserId}")
+    @CrossOrigin
+    public GetAllUsersResponse<AuthDto> getAllCoWorkers(@PathVariable Long workspaceId, @PathVariable Long currentUserId){
+
+        GetAllUsersResponse returnValue=new GetAllUsersResponse();
+        List<AuthDto> authDtos=new ArrayList<>();
+        List<UserEntity> users=workspaceService.getAllWorkers(workspaceId,currentUserId);
+        for(UserEntity user:users){
+            AuthDto authDto=new AuthDto();
+            BeanUtils.copyProperties(user,authDto);
+            authDto.setUserId(user.getId());
+            authDtos.add(authDto);
+        }
+            returnValue.setUsers(authDtos);
+            returnValue.setMessage("success");
+            returnValue.setStatus(0);
+            returnValue.setTotalUsers(authDtos.size());
+                return  returnValue;
+
+    }
 }

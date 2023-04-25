@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService{
         if(userEntity==null) throw new UserServiceExceptions(ErrorMessage.TOKEN_INVALID.getErrorMessage(), ErrorMessage.TOKEN_INVALID.getStatus());
         AuthDto returnValue=new AuthDto();
         BeanUtils.copyProperties(userEntity,returnValue);
+        returnValue.setUserId(userEntity.getId());
         return returnValue;
     }
 

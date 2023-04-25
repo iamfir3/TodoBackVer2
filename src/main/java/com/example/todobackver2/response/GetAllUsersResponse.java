@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+import java.util.List;
+
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-
+public class GetAllUsersResponse <T>{
+    List<T> users;
     private String message;
     private int status;
-    private String userName;
-    private String email;
-    private String avatar;
-    private Long userId;
+    private long totalUsers;
 }

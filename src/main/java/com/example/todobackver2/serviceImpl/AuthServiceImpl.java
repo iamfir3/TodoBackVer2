@@ -43,6 +43,16 @@ public class AuthServiceImpl implements AuthService {
         return returnValue;
     }
 
+    @Override
+    public AuthDto resetPassword(AuthDto authDto) {
+        AuthDto returnValue = new AuthDto();
+        UserEntity userEntity = userRepository.findByEmail(authDto.getEmail());
+        userEntity.setPassword(bCryptPasswordEncoder.encode(authDto.getPassword()));
+        UserEntity storedUser = userRepository.save(userEntity);
+        BeanUtils.copyProperties(storedUser, returnValue);
+        return returnValue;
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

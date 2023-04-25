@@ -13,6 +13,12 @@ public class TodoBackver2Application {
         SpringApplication.run(TodoBackver2Application.class, args);
     }
 
+//
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void init() {
+//        rabbitTemplate.setExchange(topicExchangeName);
+//    }
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();

@@ -48,6 +48,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "userSender")
     private List<ChatEntity> userSenders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Room_user> room_users = new ArrayList<>();
+
     @OneToMany(mappedBy = "userReceiver")
     private List<ChatEntity> userReceiver = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 package com.example.todobackver2.controller;
 
 import com.example.todobackver2.dto.AuthDto;
+import com.example.todobackver2.entity.UserEntity;
 import com.example.todobackver2.request.UserRequest;
 import com.example.todobackver2.response.UserResponse;
 import com.example.todobackver2.service.UserService;
@@ -26,6 +27,7 @@ public class userController {
     }
 
     @GetMapping
+    @CrossOrigin
     public UserResponse getUserByAccessToken(@RequestHeader("Authorization") String authorization) {
         UserResponse returnValue = new UserResponse();
         AuthDto userDto = userService.getUserByAccessToken(authorization);
@@ -34,5 +36,7 @@ public class userController {
         returnValue.setStatus(0);
         return returnValue;
     }
+
+
 
 }

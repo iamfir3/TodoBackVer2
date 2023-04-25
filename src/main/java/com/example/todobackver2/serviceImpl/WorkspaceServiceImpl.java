@@ -10,6 +10,7 @@ import com.example.todobackver2.entity.UserEntity;
 import com.example.todobackver2.entity.Workspace;
 import com.example.todobackver2.repository.UserRepository;
 import com.example.todobackver2.repository.WorkspaceRepository;
+import com.example.todobackver2.repository.Workspace_userRepository;
 import com.example.todobackver2.request.WorkspaceRequest;
 import com.example.todobackver2.service.WorkspaceService;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,9 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     WorkspaceRepository workspaceRepository;
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    Workspace_userRepository workspace_userRepository;
 
     @Override
     public WorkspaceDto createWorkspace(String workspaceName, String userId) {
@@ -72,6 +76,19 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             BeanUtils.copyProperties(workspace, workspaceDto);
             workspaceDto.setTotalWorkspaces(workspaces.getTotalElements());
             returnValue.add(workspaceDto);
+        }
+        return returnValue;
+    }
+
+    @Override
+    public List<UserEntity> getAllWorkers(Long workspaceId,Long currentUserId) {
+        List<UserEntity> returnValue=new ArrayList<>();
+        List<Long> userIds=workspace_userRepository.findAllByWorkspaceId(workspaceId);
+        for(Long id:userIds){
+            if(id!=currentUserId) {
+                UserEntity user = userRepository.findById(id).get();
+                returnValue.add(user);
+            }
         }
         return returnValue;
     }
