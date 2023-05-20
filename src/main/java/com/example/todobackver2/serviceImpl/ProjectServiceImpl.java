@@ -1,7 +1,5 @@
 package com.example.todobackver2.serviceImpl;
 
-import com.example.todobackver2.Exception.ErrorMessage;
-import com.example.todobackver2.Exception.ProjectServiceException;
 import com.example.todobackver2.dto.ProjectDto;
 import com.example.todobackver2.entity.ProjectEntity;
 import com.example.todobackver2.entity.Workspace;
@@ -10,15 +8,13 @@ import com.example.todobackver2.repository.WorkspaceRepository;
 import com.example.todobackver2.service.ProjectService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -55,18 +51,37 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> getAllByWorkspaceId(Integer page, Integer limit, String workspaceId) {
-        List<ProjectDto> returnValue = new ArrayList<>();
-        Pageable pageable = PageRequest.of(page, limit);
-        Workspace workspace = workspaceRepository.findById(workspaceId);
-        Page<ProjectEntity> projects = projectRepository.findAllByWorkspaceId(workspace, pageable);
-        List<ProjectEntity> projectsEntity = projects.getContent();
-        for (ProjectEntity project : projectsEntity) {
-            ProjectDto projectDto = new ProjectDto();
-            BeanUtils.copyProperties(project, projectDto);
-            projectDto.setTotalProjects(projects.getTotalElements());
-            returnValue.add(projectDto);
-        }
-
-        return returnValue;
+        return null;
     }
+
+    @Override
+    public Page<ProjectDto> getAllProjectsByWorkspace(Pageable pageable, Long workspaceId) {
+        Workspace workspace=workspaceRepository.findById(workspaceId).get();
+        List<ProjectEntity> projectEntities=projectRepository.findAllByWorkspace(workspace,pageable);
+        List<ProjectDto> projectDtos=new ArrayList<>();
+        for(ProjectEntity project:projectEntities){
+            ProjectDto projectDto=new ProjectDto();
+            BeanUtils.copyProperties(project,projectDto);
+            projectDtos.add(projectDto);
+        }
+        long total=projectRepository.countProject(workspace.getId());
+        return new PageImpl<>(projectDtos,pageable,total);
+    }
+
+//    @Override
+//    public List<ProjectDto> getAllByWorkspaceId(Integer page, Integer limit, String workspaceId) {
+//        List<ProjectDto> returnValue = new ArrayList<>();
+//        Pageable pageable = PageRequest.of(page, limit);
+//        Workspace workspace = workspaceRepository.findById(workspaceId);
+//        Page<ProjectEntity> projects = projectRepository.findAllByWorkspaceId(workspace, pageable);
+//        List<ProjectEntity> projectsEntity = projects.getContent();
+//        for (ProjectEntity project : projectsEntity) {
+//            ProjectDto projectDto = new ProjectDto();
+//            BeanUtils.copyProperties(project, projectDto);
+//            projectDto.setTotalProjects(projects.getTotalElements());
+//            returnValue.add(projectDto);
+//        }
+//
+//        return returnValue;
+//    }
 }

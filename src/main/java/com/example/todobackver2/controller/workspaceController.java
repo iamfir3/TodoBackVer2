@@ -6,6 +6,7 @@ import com.example.todobackver2.dto.AuthDto;
 import com.example.todobackver2.dto.ProjectDto;
 import com.example.todobackver2.dto.WorkspaceDto;
 import com.example.todobackver2.entity.UserEntity;
+import com.example.todobackver2.entity.Workspace;
 import com.example.todobackver2.request.WorkspaceRequest;
 import com.example.todobackver2.response.*;
 import com.example.todobackver2.service.ProjectService;
@@ -33,7 +34,7 @@ public class workspaceController {
         WorkspaceDto workspaceDto = workspaceService.createWorkspace(workspaceRequest.getWorkspaceName(), workspaceRequest.getUserId());
         BeanUtils.copyProperties(workspaceDto, returnValue);
         returnValue.setMessage("Workspace created");
-        returnValue.setWorkspaceId(workspaceDto.getWorkspaceId());
+        returnValue.setId(workspaceDto.getWorkspaceId());
         return returnValue;
     }
 
@@ -94,5 +95,26 @@ public class workspaceController {
             returnValue.setTotalUsers(authDtos.size());
                 return  returnValue;
 
+    }
+
+    @GetMapping("/{userId}")
+    @CrossOrigin
+    public List<WorkspaceDto> getAllWorkspace(@PathVariable Long userId){
+        List<WorkspaceDto> returnValue=workspaceService.getAllWorkspacesByUserId(userId);
+        return returnValue;
+    }
+    @GetMapping("/getWorkspace/{workspaceId}")
+    @CrossOrigin
+    public WorkspaceDto getWorkspace(@PathVariable Long workspaceId){
+       WorkspaceDto returnValue=workspaceService.getWorkspaceById(workspaceId);
+        return returnValue;
+    }
+
+    @PostMapping("/joinWorkspace")
+    @CrossOrigin
+    public String joinWorkspace(@RequestParam("userId") Long userId,@RequestParam("workspaceId") Long workspaceId )
+    {
+        workspaceService.joinWorkspace(userId,workspaceId);
+        return "success";
     }
 }

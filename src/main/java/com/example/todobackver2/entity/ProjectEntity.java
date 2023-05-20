@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 public class ProjectEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -32,6 +32,8 @@ public class ProjectEntity {
 
     @OneToMany(mappedBy = "project")
     private List<Project_user> projectUsers = new ArrayList<>();
+    @OneToMany(mappedBy="project")
+    private List<TaskEntity> taskEntities=new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "workspaceId",insertable = false, updatable = false)

@@ -2,17 +2,15 @@ package com.example.todobackver2.serviceImpl;
 
 import com.example.todobackver2.Exception.ErrorMessage;
 import com.example.todobackver2.Exception.WorkspaceServiceException;
-import com.example.todobackver2.Utils.GenerateId;
-import com.example.todobackver2.dto.ProjectDto;
 import com.example.todobackver2.dto.WorkspaceDto;
-import com.example.todobackver2.entity.ProjectEntity;
 import com.example.todobackver2.entity.UserEntity;
 import com.example.todobackver2.entity.Workspace;
+import com.example.todobackver2.entity.Workspace_user;
 import com.example.todobackver2.repository.UserRepository;
 import com.example.todobackver2.repository.WorkspaceRepository;
 import com.example.todobackver2.repository.Workspace_userRepository;
-import com.example.todobackver2.request.WorkspaceRequest;
 import com.example.todobackver2.service.WorkspaceService;
+import org.apache.catalina.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class WorkspaceServiceImpl implements WorkspaceService {
@@ -35,8 +32,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     Workspace_userRepository workspace_userRepository;
 
     @Override
-    public WorkspaceDto createWorkspace(String workspaceName, String userId) {
-        UserEntity user = userRepository.findById(userId);
+    public WorkspaceDto createWorkspace(String workspaceName, Long userId) {
+        UserEntity user = userRepository.findById(userId).get();
         if (userId == null) {
             throw new WorkspaceServiceException(ErrorMessage.MISSING_REQUIED_FIELD.getErrorMessage(), ErrorMessage.MISSING_REQUIED_FIELD.getStatus());
         }
@@ -48,26 +45,23 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         workspaceEntity.setWorkspaceName(workspaceName);
         workspaceEntity.setUser(user);
 
-        String workspaceId = UUID.randomUUID().toString();
-        Workspace workspace = workspaceRepository.findById(workspaceId);
-        while (workspace != null) {
-            workspaceId = UUID.randomUUID().toString();
-            workspace = workspaceRepository.findById(workspaceId);
-        }
-
-
         Workspace storedWorkspace = workspaceRepository.save(workspaceEntity);
-
+        Workspace_user workspace_user=new Workspace_user();
+        workspace_user.setWorkspaceId(storedWorkspace.getId());
+        workspace_user.setUserId(userId);
+        workspace_user.setWorkspace(storedWorkspace);
+        workspace_user.setUser(user);
+        workspace_userRepository.save(workspace_user);
         WorkspaceDto returnValue = new WorkspaceDto();
         BeanUtils.copyProperties(storedWorkspace, returnValue);
         return returnValue;
     }
 
     @Override
-    public List<WorkspaceDto> getAllByUserId(Integer page, Integer limit, String userId) {
+    public List<WorkspaceDto> getAllByUserId(Integer page, Integer limit, Long userId) {
         List<WorkspaceDto> returnValue=new ArrayList<>();
         Pageable pageable = PageRequest.of(page, limit);
-        UserEntity userEntity = userRepository.findById(userId);
+        UserEntity userEntity = userRepository.findById(userId).get();
 
         Page<Workspace> workspaces = workspaceRepository.findAllByUser(userEntity, pageable);
         List<Workspace> workspaceList = workspaces.getContent();
@@ -91,6 +85,43 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             }
         }
         return returnValue;
+    }
+
+    @Override
+    public List<WorkspaceDto> getAllWorkspacesByUserId(Long userId) {
+        List<Workspace_user> workspaceUsers=workspace_userRepository.findAllByUserId(userId);
+        List<WorkspaceDto> returnValue=new ArrayList<>();
+        for(Workspace_user workspace_user:workspaceUsers){
+            Workspace workspace=workspaceRepository.findById(workspace_user.getWorkspaceId()).get();
+            WorkspaceDto workspaceDto =new WorkspaceDto();
+            BeanUtils.copyProperties(workspace,workspaceDto);
+            workspaceDto.setWorkspaceId(workspace_user.getWorkspaceId());
+            returnValue.add(workspaceDto);
+
+        }
+        return returnValue;
+    }
+
+    @Override
+    public WorkspaceDto getWorkspaceById(Long workspaceId) {
+        WorkspaceDto returnValue=new WorkspaceDto();
+        Workspace workspace=new Workspace();
+        workspace=workspaceRepository.findById(workspaceId).get();
+        returnValue.setWorkspaceId(workspace.getId());
+        BeanUtils.copyProperties(workspace,returnValue);
+        return returnValue;
+    }
+
+    @Override
+    public void joinWorkspace(Long userId, Long workspaceId) {
+        Workspace_user workspace_user=new Workspace_user();
+        UserEntity user= userRepository.findById(userId).get();
+        Workspace workspace =workspaceRepository.findById(workspaceId).get();
+        workspace_user.setUser(user);
+        workspace_user.setWorkspace(workspace);
+        workspace_user.setUserId(userId);
+        workspace_user.setWorkspaceId(workspaceId);
+        workspace_userRepository.save(workspace_user);
     }
 
 

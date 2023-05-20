@@ -16,14 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
 
     @Column(name="content",nullable = false)
     private String content;
-
     @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name="userId",nullable = false)
     private UserEntity user;

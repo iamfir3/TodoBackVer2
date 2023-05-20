@@ -26,10 +26,11 @@ public class ChatController {
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+
     @MessageMapping("/message")
     @CrossOrigin
     public ChatDto receive(@Payload ChatDto message) throws Exception {
-        simpMessagingTemplate.convertAndSendToUser(message.getRoomId(),"/private",message);
+        simpMessagingTemplate.convertAndSendToUser(Long.toString(message.getRoomId()), "/private", message);
         return message;
     }
 }

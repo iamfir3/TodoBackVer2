@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @EnableWebSecurity
@@ -36,10 +37,16 @@ public class WebSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/auth").permitAll().requestMatchers(HttpMethod.POST, "/auth/reset").permitAll().and().authorizeHttpRequests().requestMatchers(HttpMethod.POST,"/forgot").permitAll().anyRequest().authenticated().and().addFilter(getAuthenticationFilter()).addFilter(new AuthorizationFilter(authManagerBuilder.getOrBuild())).exceptionHandling()
-                .authenticationEntryPoint(unauthorizedHandler).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authenticationProvider(daoAuthenticationProvider());
-//        http.cors().and().csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
+//        http.cors().and().csrf().disable().authorizeHttpRequests()
+//                .requestMatchers(HttpMethod.POST, "/auth")
+//                .permitAll().requestMatchers(HttpMethod.POST, "/auth/reset")
+//                .permitAll().and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/forgot")
+//                .permitAll().and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/ws/*").permitAll().anyRequest().authenticated()
+//                .and().addFilter(getAuthenticationFilter()).addFilter(new AuthorizationFilter(authManagerBuilder.getOrBuild())).exceptionHandling()
+//                .authenticationEntryPoint(unauthorizedHandler).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.cors().and().csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
+
+//        http.authenticationProvider(daoAuthenticationProvider());
         return http.build();
     }
 
@@ -51,13 +58,14 @@ public class WebSecurity {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(1800L);
+        corsConfiguration.setAllowedMethods(List.of("GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
 

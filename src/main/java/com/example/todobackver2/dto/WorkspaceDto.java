@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WorkspaceDto {
     private String workspaceName;
-    private String userId;
-    private String workspaceId;
+    private Long userId;
+    private Long workspaceId;
     private long totalWorkspaces;
 }

@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -48,15 +49,23 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest req){
-        String token=req.getHeader(SecurityContants.HEADER_STRING);
-        if(token!=null){
-            token=token.replace(SecurityContants.TOKEN_PREFIX,"");
-            String user= Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody().getSubject();
+        String tokenHeader=req.getHeader(SecurityContants.HEADER_STRING);
+        if(tokenHeader!=null){
+            tokenHeader=tokenHeader.replace(SecurityContants.TOKEN_PREFIX,"");
+            String user= Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(tokenHeader).getBody().getSubject();
             if(user!=null){
                 return new UsernamePasswordAuthenticationToken(user,null,new ArrayList<>());
             }
             else throw new AuthExceptions(ErrorMessage.TOKEN_INVALID.getErrorMessage(), ErrorMessage.TOKEN_INVALID.getStatus());
-
+        }
+        String tokenParam=req.getParameter("authorization");
+        System.out.println(tokenParam);
+        if(tokenParam!=null){
+            String user= Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(tokenParam).getBody().getSubject();
+            if(user!=null){
+                return new UsernamePasswordAuthenticationToken(user,null,new ArrayList<>());
+            }
+            else throw new AuthExceptions(ErrorMessage.TOKEN_INVALID.getErrorMessage(), ErrorMessage.TOKEN_INVALID.getStatus());
         }
         return null;
     }

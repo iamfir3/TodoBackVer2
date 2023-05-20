@@ -13,11 +13,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatDto {
-    private String userSender;
-    private String userReceiver;
+    private Long userSender;
+    private Long userReceiver;
     private String content;
     private String isRead;
-    private String roomId;
+    private Long roomId;
     private Date time;
     private Status status;
 }

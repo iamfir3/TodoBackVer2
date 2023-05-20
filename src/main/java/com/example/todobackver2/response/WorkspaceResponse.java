@@ -12,5 +12,5 @@ import lombok.Setter;
 public class WorkspaceResponse {
     private String message;
     private int status;
-    private String workspaceId;
+    private Long id;
 }

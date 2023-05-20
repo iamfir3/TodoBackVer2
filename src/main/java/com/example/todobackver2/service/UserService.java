@@ -11,4 +11,6 @@ public interface UserService extends UserDetailsService {
     UserEntity getUserById(Long userId);
 
     void updateUserById(Long userId, UserEntity userEntity);
+
+    AuthDto updateUserByIdWithImage(Long userId, AuthDto authDto);
 }

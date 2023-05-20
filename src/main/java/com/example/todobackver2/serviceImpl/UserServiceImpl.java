@@ -51,6 +51,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public AuthDto updateUserByIdWithImage(Long userId, AuthDto authDto) {
+        UserEntity user=userRepository.findById(userId).get();
+        user.setUserName(authDto.getUserName());
+        user.setEmail(authDto.getEmail());
+        user.setAvatar(authDto.getAvatar());
+        UserEntity storedUser=userRepository.save(user);
+        AuthDto returnValue=new AuthDto();
+        BeanUtils.copyProperties(storedUser,returnValue);
+        return returnValue;
+    }
+
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
     }

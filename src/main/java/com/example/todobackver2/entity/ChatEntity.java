@@ -15,7 +15,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class ChatEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

@@ -14,4 +14,6 @@ public interface Workspace_userRepository extends JpaRepository<Workspace_user, 
 
     @Query(value="SELECT * FROM workspace_user WHERE workspace_id=?1",nativeQuery = true)
     List<Long> findAllByWorkspaceId(Long workspaceId);
+
+    List<Workspace_user> findAllByUserId(Long userId);
 }

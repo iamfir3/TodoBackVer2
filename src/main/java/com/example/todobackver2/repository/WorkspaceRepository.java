@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WorkspaceRepository extends CrudRepository<Workspace,Long> {
-    Workspace findById(String workspaceId);
 
     Page<Workspace> findAllByUser(UserEntity userEntity, Pageable pageable);
+
+
 }

@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomChatEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

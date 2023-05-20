@@ -8,6 +8,10 @@ import com.example.todobackver2.response.TaskReponse;
 import com.example.todobackver2.service.ProjectService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +19,21 @@ import java.util.List;
 @RestController
 @RequestMapping("project")
 public class projectController {
-//
-//    @Autowired
-//    ProjectService projectService;
-//
+
+    @Autowired
+    ProjectService projectService;
+
+    @GetMapping("/{workspaceId}")
+    @CrossOrigin
+    private Page<ProjectDto> getAllProjectsFromWorkspace(@RequestParam(name="page") int page, @RequestParam(name="limit") int limit,@PathVariable Long workspaceId ) {
+        try {
+            Pageable pageable= PageRequest.of(page,limit);
+            return projectService.getAllProjectsByWorkspace(pageable,workspaceId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 //    @PostMapping
 //    @CrossOrigin
 //    private ProjectResponse createProject(@RequestBody ProjectDto projectRequest){

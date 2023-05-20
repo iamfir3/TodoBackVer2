@@ -55,7 +55,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String userName = ((User) auth.getPrincipal()).getUsername();
         UserService userService=(UserService) SpringApplicationContext.getBean("userServiceImpl");
         AuthDto authDto=userService.getUser(userName);
-        System.out.println(authDto.getUserId() +authDto.getUserName());
         String token = Jwts.builder().setSubject(userName).setExpiration(new Date(System.currentTimeMillis() + SecurityContants.EXPIRATION_TIME)).signWith(getSigningKey()).compact();
         UserEntity userEntity = userService.getUserById(authDto.getUserId());
         userEntity.setAccessToken(token);
