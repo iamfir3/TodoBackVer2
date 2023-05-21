@@ -45,7 +45,7 @@ public class WebSecurity {
 //                .and().addFilter(getAuthenticationFilter()).addFilter(new AuthorizationFilter(authManagerBuilder.getOrBuild())).exceptionHandling()
 //                .authenticationEntryPoint(unauthorizedHandler).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.cors().and().csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
-
+//
 //        http.authenticationProvider(daoAuthenticationProvider());
         return http.build();
     }

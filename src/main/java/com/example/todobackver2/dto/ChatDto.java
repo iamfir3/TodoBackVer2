@@ -1,10 +1,7 @@
 package com.example.todobackver2.dto;
 
 import com.example.todobackver2.entity.Status;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -12,6 +9,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class ChatDto {
     private Long userSender;
     private Long userReceiver;

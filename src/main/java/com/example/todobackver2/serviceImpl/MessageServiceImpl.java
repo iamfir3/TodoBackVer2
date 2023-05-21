@@ -109,6 +109,7 @@ public class MessageServiceImpl implements MessageService {
                 AuthDto authDto=new AuthDto();
                 UserEntity user=userRepository.findById(room_user.getUserId()).get();
                 BeanUtils.copyProperties(user,authDto);
+                authDto.setUserId(user.getId());
                 authDtos.add(authDto);
             }
         }

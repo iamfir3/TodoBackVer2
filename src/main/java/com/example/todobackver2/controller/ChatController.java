@@ -30,6 +30,7 @@ public class ChatController {
     @MessageMapping("/message")
     @CrossOrigin
     public ChatDto receive(@Payload ChatDto message) throws Exception {
+        System.out.println(message.toString());
         simpMessagingTemplate.convertAndSendToUser(Long.toString(message.getRoomId()), "/private", message);
         return message;
     }
