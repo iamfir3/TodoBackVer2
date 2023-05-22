@@ -5,15 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkspaceDto implements Serializable {
-    private String workspaceName;
+public class UserDto implements Serializable {
+    public static final long serialVersionUId = 1L;
+
+    private String userName;
     private Long userId;
-    private Long workspaceId;
-    private long totalWorkspaces;
+    private String avatar;
+    private String email;
+    private String token;
 }

@@ -37,16 +37,17 @@ public class WebSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.cors().and().csrf().disable().authorizeHttpRequests()
-//                .requestMatchers(HttpMethod.POST, "/auth")
-//                .permitAll().requestMatchers(HttpMethod.POST, "/auth/reset")
-//                .permitAll().and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/forgot")
-//                .permitAll().and().authorizeHttpRequests().requestMatchers(HttpMethod.GET, "/ws/*").permitAll().anyRequest().authenticated()
-//                .and().addFilter(getAuthenticationFilter()).addFilter(new AuthorizationFilter(authManagerBuilder.getOrBuild())).exceptionHandling()
-//                .authenticationEntryPoint(unauthorizedHandler).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.cors().and().csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
+        http.cors().and().csrf().disable().authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST, "/auth")
+                .permitAll().requestMatchers(HttpMethod.POST, "/auth/reset")
+                .permitAll().and().authorizeHttpRequests().requestMatchers(HttpMethod.POST, "/forgot")
+                .permitAll().anyRequest().authenticated()
+                .and().addFilter(getAuthenticationFilter()).addFilter(new AuthorizationFilter(authManagerBuilder.getOrBuild())).exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.authenticationProvider(daoAuthenticationProvider());
+//        http.cors().and().csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
 //
-//        http.authenticationProvider(daoAuthenticationProvider());
+
         return http.build();
     }
 

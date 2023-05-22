@@ -36,16 +36,24 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException{
         String header=req.getHeader(SecurityContants.HEADER_STRING);
-        if(header==null ||!header.startsWith(SecurityContants.TOKEN_PREFIX)){
+        String tokenParam=req.getParameter("authorization");
+        if(tokenParam!=null){
+            UsernamePasswordAuthenticationToken authenticationToken=getAuthentication(req);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             chain.doFilter(req,res);
-            res.setContentType("application/json");
-            res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }else{
+            if(header==null ||!header.startsWith(SecurityContants.TOKEN_PREFIX)){
+                chain.doFilter(req,res);
+                res.setContentType("application/json");
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 //            res.getOutputStream().println(ErrorMessage.TOKEN_IS_NULL.getErrorMessage()+ ErrorMessage.TOKEN_IS_NULL.getStatus());
-            return ;
+                return ;
+            }
+            UsernamePasswordAuthenticationToken authenticationToken=getAuthentication(req);
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            chain.doFilter(req,res);
         }
-        UsernamePasswordAuthenticationToken authenticationToken=getAuthentication(req);
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        chain.doFilter(req,res);
+
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest req){
@@ -59,7 +67,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             else throw new AuthExceptions(ErrorMessage.TOKEN_INVALID.getErrorMessage(), ErrorMessage.TOKEN_INVALID.getStatus());
         }
         String tokenParam=req.getParameter("authorization");
-        System.out.println(tokenParam);
+
         if(tokenParam!=null){
             String user= Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(tokenParam).getBody().getSubject();
             if(user!=null){

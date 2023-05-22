@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,4 +19,6 @@ public class ProjectDto {
     private String description;
     private String workspaceId;
     private long totalProjects;
+    private List<UserDto> users;
+    private List<TaskDto> tasks;
 }
