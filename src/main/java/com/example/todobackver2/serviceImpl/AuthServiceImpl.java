@@ -37,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(authDto, userEntity);
         userEntity.setPassword(bCryptPasswordEncoder.encode(authDto.getPassword()));
+        userEntity.setAvatar("https://res.cloudinary.com/dyvgnrswn/image/upload/v1684721106/mhqiehkoysbdiquyu88a.png");
         UserEntity storedUser = userRepository.save(userEntity);
         BeanUtils.copyProperties(storedUser, returnValue);
 

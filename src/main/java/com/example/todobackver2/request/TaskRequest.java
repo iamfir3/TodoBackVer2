@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -16,5 +17,7 @@ public class TaskRequest {
         private Date dayBegin;
         private Date dayEnd;
         private String description;
-        private String projectId;
+        private Long projectId;
+        private Long userId;
+        private int priority;
 }

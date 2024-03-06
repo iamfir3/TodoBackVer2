@@ -2,6 +2,7 @@ package com.example.todobackver2.serviceImpl;
 
 import com.example.todobackver2.dto.AuthDto;
 import com.example.todobackver2.dto.ChatDto;
+import com.example.todobackver2.dto.ChatMessagesDto;
 import com.example.todobackver2.entity.ChatEntity;
 import com.example.todobackver2.entity.RoomChatEntity;
 import com.example.todobackver2.entity.Room_user;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,6 +41,7 @@ public class MessageServiceImpl implements MessageService {
         chatEntity.setUserReceiver(userReceiver);
         chatEntity.setRead(false);
         chatEntity.setRoomId(room);
+        chatEntity.setCreatedAt(new Date());
         ChatEntity storedChat= chatRepository.save(chatEntity);
         BeanUtils.copyProperties(storedChat,chatDto);
         return chatDto;
@@ -67,20 +70,18 @@ public class MessageServiceImpl implements MessageService {
         }
         return roomId;
     }
-
     @Override
-    public String takeRecentMess(Long roomId) {
+    public ChatMessagesDto takeRecentMess(Long roomId,Long userId) {
+        ChatMessagesDto chatMessagesDto=new ChatMessagesDto();
         RoomChatEntity room=roomChatRepository.findById(roomId).get();
         List<ChatEntity> chatEntity=chatRepository.findAllByRoomId(room);
-        if(chatEntity.size()==0) return "";
-         String recentMess=chatRepository.findFirstByRoomIdOrderByCreatedAtDesc(room).getContent();
-         if(recentMess!=null)
-         {
-             return recentMess;
-         } else return "";
-
+        Room_user room_user=roomUserRepository.findByRoomIdAndUserId(roomId,userId);
+        if(chatEntity.size()==0) return new ChatMessagesDto(roomId,"",0,null,null);
+         chatMessagesDto.setContent(chatRepository.findFirstByRoomIdOrderByCreatedAtDesc(room).getContent());
+         chatMessagesDto.setCountUnread(room_user.getUnreadCount());
+         chatMessagesDto.setRoomId(roomId);
+        return chatMessagesDto;
     }
-
     @Override
     public List<ChatDto> getAllMessage(Long roomId) {
         RoomChatEntity room=roomChatRepository.findById(roomId).get();
@@ -98,7 +99,6 @@ public class MessageServiceImpl implements MessageService {
 
         return returnValue;
     }
-
     @Override
     public List<AuthDto> getOtherPerson(Long roomId, Long userCurrent) {
         RoomChatEntity room=roomChatRepository.findById(roomId).get();
@@ -115,4 +115,29 @@ public class MessageServiceImpl implements MessageService {
         }
         return authDtos;
     }
+    @Override
+    public ChatMessagesDto takeUnreadCount(Long roomId, Long userId) {
+        RoomChatEntity roomChatEntity=roomChatRepository.findById(roomId).get();
+        UserEntity user=userRepository.findById(userId).get();
+        Room_user room_user=roomUserRepository.findByRoomAndUser(roomChatEntity,user);
+        ChatMessagesDto chatMessagesDto=new ChatMessagesDto();
+        chatMessagesDto.setCountUnread(room_user.getUnreadCount());
+        chatMessagesDto.setUserReceiver(userId);
+        room_user.setUnreadCount(room_user.getUnreadCount()+1);
+        roomUserRepository.save(room_user);
+        return chatMessagesDto;
+    }
+    @Override
+    public ChatMessagesDto resetUnreadCount(Long roomId, Long userId) {
+        RoomChatEntity roomChatEntity=roomChatRepository.findById(roomId).get();
+        UserEntity user=userRepository.findById(userId).get();
+        Room_user room_user=roomUserRepository.findByRoomAndUser(roomChatEntity,user);
+        ChatMessagesDto chatMessagesDto=new ChatMessagesDto();
+        chatMessagesDto.setCountUnread(0);
+        chatMessagesDto.setUserReceiver(userId);
+        room_user.setUnreadCount(0);
+        roomUserRepository.save(room_user);
+        return chatMessagesDto;
+    }
+
 }

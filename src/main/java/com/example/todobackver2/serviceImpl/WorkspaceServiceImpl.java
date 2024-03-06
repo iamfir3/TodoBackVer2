@@ -27,10 +27,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     WorkspaceRepository workspaceRepository;
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     Workspace_userRepository workspace_userRepository;
-
     @Override
     public WorkspaceDto createWorkspace(String workspaceName, Long userId) {
         UserEntity user = userRepository.findById(userId).get();
@@ -62,7 +60,6 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         List<WorkspaceDto> returnValue=new ArrayList<>();
         Pageable pageable = PageRequest.of(page, limit);
         UserEntity userEntity = userRepository.findById(userId).get();
-
         Page<Workspace> workspaces = workspaceRepository.findAllByUser(userEntity, pageable);
         List<Workspace> workspaceList = workspaces.getContent();
         for (Workspace workspace : workspaceList) {
@@ -79,7 +76,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         List<UserEntity> returnValue=new ArrayList<>();
         List<Long> userIds=workspace_userRepository.findAllByWorkspaceId(workspaceId);
         for(Long id:userIds){
-            if(id!=currentUserId) {
+            if(id.longValue()!=currentUserId.longValue()) {
                 UserEntity user = userRepository.findById(id).get();
                 returnValue.add(user);
             }
@@ -90,6 +87,9 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public List<WorkspaceDto> getAllWorkspacesByUserId(Long userId) {
         List<Workspace_user> workspaceUsers=workspace_userRepository.findAllByUserId(userId);
+        if(workspaceUsers==null){
+            return new ArrayList<>();
+        }
         List<WorkspaceDto> returnValue=new ArrayList<>();
         for(Workspace_user workspace_user:workspaceUsers){
             Workspace workspace=workspaceRepository.findById(workspace_user.getWorkspaceId()).get();
@@ -97,7 +97,6 @@ public class WorkspaceServiceImpl implements WorkspaceService {
             BeanUtils.copyProperties(workspace,workspaceDto);
             workspaceDto.setWorkspaceId(workspace_user.getWorkspaceId());
             returnValue.add(workspaceDto);
-
         }
         return returnValue;
     }
@@ -122,6 +121,11 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         workspace_user.setUserId(userId);
         workspace_user.setWorkspaceId(workspaceId);
         workspace_userRepository.save(workspace_user);
+    }
+
+    @Override
+    public Long countWorkspacesByUserId(Long userId) {
+        return workspace_userRepository.countByUserId(userId);
     }
 
 

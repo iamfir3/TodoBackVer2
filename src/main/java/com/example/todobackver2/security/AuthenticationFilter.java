@@ -1,4 +1,5 @@
 package com.example.todobackver2.security;
+import com.example.todobackver2.service.WorkspaceService;
 import org.json.JSONObject;
 import com.example.todobackver2.SpringApplicationContext;
 import com.example.todobackver2.dto.AuthDto;
@@ -54,7 +55,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) throws IOException, ServletException {
         String userName = ((User) auth.getPrincipal()).getUsername();
         UserService userService=(UserService) SpringApplicationContext.getBean("userServiceImpl");
+        WorkspaceService workspaceService=(WorkspaceService) SpringApplicationContext.getBean("workspaceServiceImpl");
         AuthDto authDto=userService.getUser(userName);
+        Long workspacesCount=workspaceService.countWorkspacesByUserId(authDto.getUserId());
         String token = Jwts.builder().setSubject(userName).setExpiration(new Date(System.currentTimeMillis() + SecurityContants.EXPIRATION_TIME)).signWith(getSigningKey()).compact();
         UserEntity userEntity = userService.getUserById(authDto.getUserId());
         userEntity.setAccessToken(token);
@@ -65,6 +68,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         responseData.put("userId", authDto.getUserId());
         responseData.put("avatar", authDto.getAvatar());
         responseData.put("message", "Login succesfully");
+        responseData.put("workspacesCount", workspacesCount);
         responseData.put("accessToken",SecurityContants.TOKEN_PREFIX+token);
         responseData.put("status", 0);
         res.setContentType("application/json");

@@ -2,7 +2,9 @@ package com.example.todobackver2.controller;
 
 import com.example.todobackver2.dto.AuthDto;
 import com.example.todobackver2.dto.ChatDto;
+import com.example.todobackver2.dto.ChatMessagesDto;
 import com.example.todobackver2.entity.ChatEntity;
+import com.example.todobackver2.entity.Room_user;
 import com.example.todobackver2.response.MessageResponse;
 import com.example.todobackver2.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,12 +50,23 @@ public class MessageController {
         return roomId;
     }
 
-    @GetMapping("/takeRecentMess/{roomId}")
+    @GetMapping("/takeRecentMess/{roomId}/{userId}")
     @CrossOrigin
-    public String takeRecentMess(@PathVariable Long roomId)
+    public ChatMessagesDto takeRecentMess(@PathVariable Long roomId,@PathVariable Long userId)
     {
-        String recentMess=messageService.takeRecentMess(roomId);
-        return recentMess;
+        return messageService.takeRecentMess(roomId,userId);
+    }
+
+    @GetMapping("/takeUnreadCount/{roomId}/{userId}")
+    @CrossOrigin
+    public ChatMessagesDto takeUnreadCount(@PathVariable Long roomId,@PathVariable Long userId){
+        return messageService.takeUnreadCount(roomId,userId);
+    }
+
+    @PutMapping("/resetUnreadCount/{roomId}/{userId}")
+    @CrossOrigin
+    public ChatMessagesDto resetUnreadCount (@PathVariable Long roomId,@PathVariable Long userId){
+        return  messageService.resetUnreadCount(roomId,userId);
     }
 
 }

@@ -6,6 +6,7 @@ import com.example.todobackver2.dto.AuthDto;
 import com.example.todobackver2.request.UserRequest;
 import com.example.todobackver2.response.UserResponse;
 import com.example.todobackver2.service.UserService;
+import com.example.todobackver2.service.WorkspaceService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ public class userController {
     UserService userService;
 
     @Autowired
+    WorkspaceService workspaceService;
+    @Autowired
     Cloudinary cloudinary;
 
     @PostMapping
@@ -28,7 +31,9 @@ public class userController {
     public UserResponse getUser(@RequestBody UserRequest userRequest) {
         UserResponse returnValue = new UserResponse();
         AuthDto userDto=userService.getUser(userRequest.getEmail());
+        Long workspacesCount=workspaceService.countWorkspacesByUserId(userDto.getUserId());
         BeanUtils.copyProperties(userDto, returnValue);
+        returnValue.setWorkspacesCount(workspacesCount);
         returnValue.setMessage("Success");
         returnValue.setStatus(0);
         return returnValue;
@@ -45,6 +50,7 @@ public class userController {
         authDto.setAvatar(imageUrl);
         AuthDto storedUser=userService.updateUserByIdWithImage(userId,authDto);
         BeanUtils.copyProperties(storedUser,userResponse);
+        userResponse.setUserId(storedUser.getUserId());
         return userResponse;
     }
 

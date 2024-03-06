@@ -7,5 +7,9 @@ import java.util.List;
 public interface TaskService {
     TaskDto createTask(TaskDto taskDto);
 
-    List<TaskDto> getAllByProjectId(Integer page, Integer limit, String projectId);
+    List<TaskDto> getAllByProjectId(Integer page, Integer limit, Long projectId);
+
+    TaskDto checkDone(Long taskId);
+
+    TaskDto getTaskDetail(Long taskId);
 }

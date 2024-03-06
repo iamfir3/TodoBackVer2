@@ -24,11 +24,9 @@ public class CommentEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
-
     @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name="taskId",nullable = false)
     private TaskEntity task;
-
     @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name="userId",nullable = false)
     private UserEntity user;

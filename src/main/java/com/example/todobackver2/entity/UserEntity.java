@@ -24,8 +24,8 @@ public class UserEntity {
     private String userName;
     @Column(name="password",nullable = false)
     private String password;
-    @Column(name="avatar",nullable = true)
-    private String avatar;
+    @Column(name="avatar",nullable = false)
+    private String avatar="https://res.cloudinary.com/dyvgnrswn/image/upload/v1684721106/mhqiehkoysbdiquyu88a.png";
     @Column(name="email",nullable = true,unique = true)
     private String email;
     @Column(name="accessToken",nullable = true)
@@ -56,6 +56,5 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<GroupChat_User> GroupChat_User = new ArrayList<>();
-
 
 }

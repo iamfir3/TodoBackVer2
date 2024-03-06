@@ -14,11 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ProjectDto {
     private String projectName;
+    private Long id;
     private Date dayBegin;
     private Date dayEnd;
     private String description;
-    private String workspaceId;
+    private Long workspaceId;
     private long totalProjects;
     private List<UserDto> users;
+    private List<Long> usersId;
     private List<TaskDto> tasks;
 }

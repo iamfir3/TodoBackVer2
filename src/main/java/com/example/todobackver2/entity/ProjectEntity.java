@@ -1,10 +1,7 @@
 package com.example.todobackver2.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,7 +33,7 @@ public class ProjectEntity {
     private List<TaskEntity> taskEntities=new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "workspaceId",insertable = false, updatable = false)
+    @JoinColumn(name = "workspaceId")
     private Workspace workspace;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -48,5 +45,15 @@ public class ProjectEntity {
     @PreUpdate
     public void setUpdatedAt() {
         this.updatedAt = new Date();
+    }
+
+    public ProjectEntity(Long id, String projectName, Date dayBegin, Date dayEnd, String description, Date createdAt, Date updatedAt) {
+        this.id = id;
+        this.projectName = projectName;
+        this.dayBegin = dayBegin;
+        DayEnd = dayEnd;
+        Description = description;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 }

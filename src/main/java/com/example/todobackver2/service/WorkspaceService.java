@@ -17,4 +17,6 @@ public interface WorkspaceService {
     WorkspaceDto getWorkspaceById(Long workspaceId);
 
     void joinWorkspace(Long userId, Long workspaceId);
+
+     Long countWorkspacesByUserId(Long userId);
 }

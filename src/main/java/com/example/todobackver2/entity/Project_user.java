@@ -2,15 +2,15 @@ package com.example.todobackver2.entity;
 
 import com.example.todobackver2.CompositeKey.Project_user_id;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @IdClass(Project_user_id.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Setter
+@Getter
 public class Project_user {
 
     @Id

@@ -1,6 +1,7 @@
 package com.example.todobackver2.service;
 
 import com.example.todobackver2.dto.ProjectDto;
+import com.example.todobackver2.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,5 +12,7 @@ public interface ProjectService {
 
     List<ProjectDto> getAllByWorkspaceId(Integer page, Integer limit, String workspaceId);
 
-    Page<ProjectDto> getAllProjectsByWorkspace(Pageable pageable,Long workspaceId);
+    Page<ProjectDto> getAllProjectsByWorkspace(Pageable pageable,Long workspaceId,Long userId);
+
+    List<UserDto> getAllCoWorkerProject(Long projectId);
 }

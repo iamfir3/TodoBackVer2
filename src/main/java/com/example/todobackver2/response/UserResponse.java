@@ -17,4 +17,5 @@ public class UserResponse {
     private String email;
     private String avatar;
     private Long userId;
+    private Long workspacesCount;
 }

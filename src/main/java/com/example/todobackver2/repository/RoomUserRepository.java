@@ -3,6 +3,7 @@ package com.example.todobackver2.repository;
 import com.example.todobackver2.CompositeKey.Room_user_id;
 import com.example.todobackver2.entity.RoomChatEntity;
 import com.example.todobackver2.entity.Room_user;
+import com.example.todobackver2.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,8 @@ public interface RoomUserRepository extends JpaRepository<Room_user, Room_user_i
     Long findByUserIds(Long userId1, Long userId2);
 
     List<Room_user> findAllByRoomId(Long roomId);
+
+    Room_user findByRoomIdAndUserId(Long roomId, Long userId);
+
+    Room_user findByRoomAndUser(RoomChatEntity roomChatEntity, UserEntity user);
 }
